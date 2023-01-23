@@ -1,33 +1,36 @@
-// Wemos D1 Mini E1.31 and Smart Home Support via Blync
-
+// Wemos D1 Mini E1.31 - 6 channel dumb RGB led sketch + Blynk latest version operatbility
 #define BLYNK_PRINT Serial
 #include <BlynkSimpleEsp8266.h>
 #include <ESP8266WiFi.h>
 #include <E131.h>
 
-#define VPIN_BUTTON_1 V1 // the virtual pin for blync
-#define channel_1_green 1 // the channel number to link to output
+// this script assumes use w/ virtual pin button 4 and xlights universe (E1.31) 8, update to use a different VPIN
+
+#define VPIN_BUTTON_4 V4
+#define channel_1_green 1 // the channel number to link to output 1 green.
 
 // this sets the pin numbers to use as outputs.
-#define output_1_green D1 // the pin to use as output 1 green
+#define output_1_green D1 // the pin to use as output 1 green (D2).
 
 // ***** USER SETUP STUFF *****
-#define AUTH "" // your blync auth
+#define BLYNK_TEMPLATE_ID "" //replace with your blynk template ID
+#define BLYNK_DEVICE_NAME "" //replace with your blynk device ID
+#define BLYNK_AUTH_TOKEN "" //replace with your blynk autho token
 const char WIFI_SSID[] = "";  // replace with your SSID.
 const char WIFI_PASS[] = ""; // replace with your PASSWORD.
 
 BlynkTimer timer;
-const int universe = 5; // this sets the universe number you are using.
+const int universe = 8; // this sets the universe number you are using.. make sure to match your setting in xlights (or equiv)
 
 // this sets the channel number used by the output.
 E131 e131;
 
 BLYNK_CONNECTED() {
-  Blynk.syncVirtual(VPIN_BUTTON_1);
+  Blynk.syncVirtual(VPIN_BUTTON_4);
 }
-BLYNK_WRITE(VPIN_BUTTON_1) {
+BLYNK_WRITE(VPIN_BUTTON_4) {
   digitalWrite(output_1_green, param.asInt());
-  Serial.println("Button_1:");
+  Serial.println("Button_2:");
 }
 void checkBlynkStatus() { // called every 3 seconds by SimpleTimer
 }
@@ -40,7 +43,7 @@ void setup() {
   
   WiFi.begin(WIFI_SSID, WIFI_PASS);
   timer.setInterval(3000L, checkBlynkStatus); // check if Blynk server is connected every 3 seconds
-  Blynk.config(AUTH);
+  Blynk.config(BLYNK_AUTH_TOKEN);
 
   /* Choose one to begin listening for E1.31 data */
   Serial.print("Connecting to ");
